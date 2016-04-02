@@ -44,7 +44,7 @@ namespace TwitchBot
           if (result["stream"].HasValues)
           {
             Attachment previewAttachment = new Attachment();
-            previewAttachment.ContentUrl = result["stream"]["preview"]["small"].ToString(); ;
+            previewAttachment.ContentUrl = result["stream"]["preview"]["medium"].ToString(); ;
             previewAttachment.ContentType = "image/png";
             Message reply = message.CreateReplyMessage(String.Format("{0} is online since {1}.{2}", channel, result["stream"]["created_at"].ToString(), Environment.NewLine));
             reply.Attachments = new List<Attachment>();
