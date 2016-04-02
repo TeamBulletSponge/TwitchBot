@@ -23,7 +23,7 @@ namespace TwitchBot
     {
       if (message.Type == "Message")
       {
-        string[] tokens = message.Text.Split(' ');
+        string[] tokens = message.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         if (tokens == null || tokens.Length == 0)
         {
           return null;
