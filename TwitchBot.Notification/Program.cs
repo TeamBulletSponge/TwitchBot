@@ -43,15 +43,21 @@ namespace TwitchBot.Notification
             if (result["stream"].HasValues && !_channelNofitications.Contains(channel))
             {
               message = BuildOnlineMessage(channel, result);
-              _channelNofitications.Add(channel);
+
+              if (SendMessage(endpoint, message))
+              {
+                _channelNofitications.Add(channel);
+              }
             }
             else if (!result["stream"].HasValues && _channelNofitications.Contains(channel))
             {
               message = "{\"attachments\": [{\"text\": \"" + channel + " has stopped broadcasting\", \"color\": \"danger\"}]}";
-              _channelNofitications.Remove(channel);
-            }
 
-            SendMessage(endpoint, message);
+              if (SendMessage(endpoint, message))
+              {
+                _channelNofitications.Remove(channel);
+              }
+            }
           }
           catch (Exception ex)
           {
@@ -67,15 +73,16 @@ namespace TwitchBot.Notification
     {
       return "{\"attachments\": [{\"title\": \"" + channel + " is broadcasting\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"color\": \"good\", \"thumb_url\": \"" + result["stream"]["preview"]["small"].ToString() + "\", \"fields\": [{\"title\": \"Game\", \"value\": \"" + result["stream"]["channel"]["game"].ToString() + "\"},{\"title\": \"Title\", \"value\": \"" + result["stream"]["channel"]["status"].ToString() + "\"}]}]}";
     }
-    
-    private static void SendMessage(string endpoint, string message)
+
+    private static bool SendMessage(string endpoint, string message)
     {
+      bool success = true;
+
       try
       {
         if (!string.IsNullOrEmpty(endpoint) && !string.IsNullOrEmpty(message))
         {
           WebRequest req = WebRequest.Create(endpoint);
-
           req.Proxy = null;
           req.Method = "POST";
           req.ContentType = "application/x-www-form-urlencoded";
@@ -88,13 +95,16 @@ namespace TwitchBot.Notification
             reqStream.Write(reqData, 0, reqData.Length);
           }
 
-          req.GetResponse();
+          using (WebResponse response = req.GetResponse()) { /* Ignore for now */ }
         }
       }
       catch (Exception ex)
       {
         Console.Error.WriteLine(ex);
+        success = false;
       }
+
+      return success;
     }
   }
 }
