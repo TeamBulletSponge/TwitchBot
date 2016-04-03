@@ -29,7 +29,7 @@ namespace TwitchBot
           return null;
         }
 
-        if (tokens[0] == "/status")
+        if (tokens[0] == "status")
         {
           if (tokens.Length == 1)
           {
