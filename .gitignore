@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/TwitchBot/App_Data/jobs/continuous/notification
