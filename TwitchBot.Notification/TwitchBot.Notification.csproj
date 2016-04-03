@@ -58,7 +58,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetDir)" "$(SolutionDir)TwitchBot\App_Data\jobs\continuous\notification\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y /R "$(TargetDir)*.*" "$(SolutionDir)TwitchBot\App_Data\jobs\continuous\notification\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
