@@ -46,7 +46,7 @@ namespace TwitchBot
             Attachment previewAttachment = new Attachment();
             previewAttachment.ContentUrl = result["stream"]["preview"]["medium"].ToString(); ;
             previewAttachment.ContentType = "image/png";
-            Message reply = message.CreateReplyMessage(String.Format("[{0}]({1}{0}) is online since {2}.{3}", channel, "http://twitch.tv/", result["stream"]["created_at"].ToString(), Environment.NewLine));
+            Message reply = message.CreateReplyMessage(String.Format("[{0}]({1}{0}) is broadcasting '" + result["stream"]["channel"]["game"].ToString() + "' since {2}.{3}", channel, "http://twitch.tv/", result["stream"]["created_at"].ToString(), Environment.NewLine));
             reply.Attachments = new List<Attachment>();
             reply.Attachments.Add(previewAttachment);
 
