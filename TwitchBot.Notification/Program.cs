@@ -76,10 +76,10 @@ namespace TwitchBot.Notification
 
         using (Stream reqStream = req.GetRequestStream())
         {
-//          reqStream.Write(reqData, 0, reqData.Length);
+          reqStream.Write(reqData, 0, reqData.Length);
         }
 
- //       req.GetResponse();
+        req.GetResponse();
       }
     }
   }
