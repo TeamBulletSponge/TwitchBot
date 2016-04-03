@@ -95,6 +95,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\jobs\continuous\notification\Newtonsoft.Json.dll" />
+    <Content Include="App_Data\jobs\continuous\notification\Newtonsoft.Json.xml" />
+    <Content Include="App_Data\jobs\continuous\notification\TwitchBot.Notification.exe" />
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
@@ -109,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="App_Data\jobs\continuous\notification\TwitchBot.Notification.exe.config" />
     <None Include="Properties\PublishProfiles\TwitchIntegrationBot - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -118,7 +122,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\jobs\continuous\notification\" />
+    <ProjectReference Include="..\TwitchBot.Notification\TwitchBot.Notification.csproj">
+      <Project>{7d11e056-e061-4491-990e-99fc110d9463}</Project>
+      <Name>TwitchBot.Notification</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
