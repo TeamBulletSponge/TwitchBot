@@ -19,11 +19,14 @@ namespace TwitchBot.Notification
 
     static void Main(string[] args)
     {
-      Console.Out.WriteLine("Endpoint: " + ConfigurationManager.AppSettings["SlackEndPoint"]);
-      Console.Out.WriteLine("Channels: " + ConfigurationManager.AppSettings["TwitchChannels"]);
-
       string endpoint = ConfigurationManager.AppSettings["SlackEndPoint"];
-      string[] channels = ConfigurationManager.AppSettings["TwitchChannels"].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+      string channelList = ConfigurationManager.AppSettings["TwitchChannels"];
+      string[] channels = channelList.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+      Console.Out.WriteLine("Endpoint: " + endpoint);
+      Console.Out.WriteLine("Channels: " + channelList);
+
+      SendMessage(endpoint, "{\"text\": \"Started following channel(s): " + channelList + "\"}");
 
       while (true)
       {
@@ -37,36 +40,46 @@ namespace TwitchBot.Notification
 
           if (result["stream"].HasValues && !_channelNofitications.Contains(channel))
           {
-            message = "{\"text\": \"" + channel + " is broadcasting.\"}";
+            message = BuildOnlineMessage(channel, result);
             _channelNofitications.Add(channel);
           }
           else if (!result["stream"].HasValues && _channelNofitications.Contains(channel))
           {
-            message = "{\"text\": \"" + channel + " has stopped broadcasting.\"}";
+            message = "{\"text\": \"" + channel + " has stopped broadcasting\"}";
             _channelNofitications.Remove(channel);
           }
 
-          if (!string.IsNullOrEmpty(message))
-          {
-            WebRequest req = WebRequest.Create(endpoint);
-
-            req.Proxy = null;
-            req.Method = "POST";
-            req.ContentType = "application/x-www-form-urlencoded";
-
-            byte[] reqData = Encoding.UTF8.GetBytes(message);
-            req.ContentLength = reqData.Length;
-
-            using (Stream reqStream = req.GetRequestStream())
-            {
-              reqStream.Write(reqData, 0, reqData.Length);
-            }
-
-            req.GetResponse();
-          }
+          SendMessage(endpoint, message);
         }
 
         Thread.Sleep(TimeSpan.FromMinutes(2));
+      }
+    }
+
+    private static string BuildOnlineMessage(string channel, JObject result)
+    {
+      return "{\"attachments\": [{\"title\": \"" + channel + " is broadcasting\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"image_url\": \"" + result["stream"]["preview"]["medium"].ToString() + "\"}]}";
+    }
+
+    private static void SendMessage(string endpoint, string message)
+    {
+      if (!string.IsNullOrEmpty(message))
+      {
+        WebRequest req = WebRequest.Create(endpoint);
+
+        req.Proxy = null;
+        req.Method = "POST";
+        req.ContentType = "application/x-www-form-urlencoded";
+
+        byte[] reqData = Encoding.UTF8.GetBytes(message);
+        req.ContentLength = reqData.Length;
+
+        using (Stream reqStream = req.GetRequestStream())
+        {
+          reqStream.Write(reqData, 0, reqData.Length);
+        }
+
+        req.GetResponse();
       }
     }
   }
