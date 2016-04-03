@@ -58,12 +58,12 @@ namespace TwitchBot.Notification
 
     private static string BuildOnlineMessage(string channel, JObject result)
     {
-      return "{\"attachments\": [{\"title\": \"" + channel + " is broadcasting\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"image_url\": \"" + result["stream"]["preview"]["medium"].ToString() + "\"}]}";
+      return "{\"attachments\": [{\"title\": \"" + channel + " is broadcasting '" + result["stream"]["channel"]["game"].ToString() + "'\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"image_url\": \"" + result["stream"]["preview"]["medium"].ToString() + "\"}]}";
     }
 
     private static void SendMessage(string endpoint, string message)
     {
-      if (!string.IsNullOrEmpty(message))
+      if (!string.IsNullOrEmpty(endpoint) && !string.IsNullOrEmpty(message))
       {
         WebRequest req = WebRequest.Create(endpoint);
 
@@ -76,10 +76,10 @@ namespace TwitchBot.Notification
 
         using (Stream reqStream = req.GetRequestStream())
         {
-          reqStream.Write(reqData, 0, reqData.Length);
+//          reqStream.Write(reqData, 0, reqData.Length);
         }
 
-        req.GetResponse();
+ //       req.GetResponse();
       }
     }
   }
