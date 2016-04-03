@@ -30,7 +30,7 @@ namespace TwitchBot.Notification
 
       while (true)
       {
-        foreach (string channel in channels)
+        foreach (string channel in channels.Select(s => s.Trim().ToLower()))
         {
           try
           {
@@ -47,7 +47,7 @@ namespace TwitchBot.Notification
             }
             else if (!result["stream"].HasValues && _channelNofitications.Contains(channel))
             {
-              message = "{\"text\": \"" + channel + " has stopped broadcasting\"}";
+              message = "{\"attachments\": [{\"text\": \"" + channel + " has stopped broadcasting\", \"color\": \"danger\"}]}";
               _channelNofitications.Remove(channel);
             }
 
@@ -65,9 +65,9 @@ namespace TwitchBot.Notification
 
     private static string BuildOnlineMessage(string channel, JObject result)
     {
-      return "{\"attachments\": [{\"title\": \"" + channel + " is broadcasting '" + result["stream"]["channel"]["game"].ToString() + "'\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"image_url\": \"" + result["stream"]["preview"]["medium"].ToString() + "\"}]}";
+      return "{\"attachments\": [{\"title\": \"" + channel + " is broadcasting\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"color\": \"good\", \"thumb_url\": \"" + result["stream"]["preview"]["small"].ToString() + "\", \"fields\": [{\"title\": \"Game\", \"value\": \"" + result["stream"]["channel"]["game"].ToString() + "\"},{\"title\": \"Title\", \"value\": \"" + result["stream"]["channel"]["status"].ToString() + "\"}]}]}";
     }
-
+    
     private static void SendMessage(string endpoint, string message)
     {
       try
