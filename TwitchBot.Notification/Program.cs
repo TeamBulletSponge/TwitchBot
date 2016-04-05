@@ -26,8 +26,6 @@ namespace TwitchBot.Notification
       Console.Out.WriteLine("Endpoint: " + endpoint);
       Console.Out.WriteLine("Channels: " + channelList);
 
-      SendMessage(endpoint, "{\"text\": \"Started following channel(s): " + channelList + "\"}");
-
       while (true)
       {
         foreach (string channel in channels.Select(s => s.Trim().ToLower()))
