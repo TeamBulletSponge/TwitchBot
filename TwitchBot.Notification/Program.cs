@@ -21,6 +21,7 @@ namespace TwitchBot.Notification
     {
       string endpoint = ConfigurationManager.AppSettings["SlackEndPoint"];
       string channelList = ConfigurationManager.AppSettings["TwitchChannels"];
+      string clientID = ConfigurationManager.AppSettings["TwitchClientID"];
       string[] channels = channelList.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
       Console.Out.WriteLine("Endpoint: " + endpoint);
@@ -32,7 +33,7 @@ namespace TwitchBot.Notification
         {
           try
           {
-            string url = KrakenUrl + "streams/" + channel;
+            string url = KrakenUrl + "streams/" + channel + "?client_id=" + clientID;
             var json = _webClient.DownloadString(url);
             JObject result = JObject.Parse(json);
 

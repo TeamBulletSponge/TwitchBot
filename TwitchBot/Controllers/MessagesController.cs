@@ -6,6 +6,7 @@ using Microsoft.Bot.Connector.Utilities;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System;
+using System.Configuration;
 
 namespace TwitchBot
 {
@@ -23,6 +24,8 @@ namespace TwitchBot
     {
       if (message.Type == "Message")
       {
+        string clientID = ConfigurationManager.AppSettings["TwitchClientID"];
+
         string[] tokens = message.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         if (tokens == null || tokens.Length == 0)
         {
@@ -37,7 +40,7 @@ namespace TwitchBot
           }
 
           string channel = tokens[1];
-          string url = KrakenUrl + "streams/" + channel;
+          string url = KrakenUrl + "streams/" + channel + "?client_id=" + clientID;
           var json = WebClient.DownloadString(url);
           JObject result = JObject.Parse(json);
 
