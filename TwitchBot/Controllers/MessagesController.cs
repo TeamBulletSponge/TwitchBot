@@ -32,14 +32,16 @@ namespace TwitchBot
           return null;
         }
 
-        if (tokens[0] == "status")
+        string firstToken = tokens[0].ToLower();
+
+        if (firstToken == "status")
         {
           if (tokens.Length == 1)
           {
             return message.CreateReplyMessage("You must provide a channel name: /status {channel}");
           }
 
-          string channel = tokens[1];
+          string channel = tokens[1].ToLower();
           string url = KrakenUrl + "streams/" + channel + "?client_id=" + clientID;
           var json = WebClient.DownloadString(url);
           JObject result = JObject.Parse(json);
