@@ -22,6 +22,7 @@ namespace TwitchBot.Notification
       string endpoint = ConfigurationManager.AppSettings["SlackEndPoint"];
       string channelList = ConfigurationManager.AppSettings["TwitchChannels"];
       string clientID = ConfigurationManager.AppSettings["TwitchClientID"];
+      string channelOverride = ConfigurationManager.AppSettings["SlackChannelOverride"];
       string[] channels = channelList.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
       Console.Out.WriteLine("Endpoint: " + endpoint);
@@ -41,7 +42,7 @@ namespace TwitchBot.Notification
 
             if (result["stream"].HasValues && !_channelNofitications.Contains(channel))
             {
-              message = BuildOnlineMessage(channel, result);
+              message = BuildOnlineMessage(channel, channelOverride, result);
 
               if (SendMessage(endpoint, message))
               {
@@ -50,8 +51,7 @@ namespace TwitchBot.Notification
             }
             else if (!result["stream"].HasValues && _channelNofitications.Contains(channel))
             {
-              message = "{\"attachments\": [{\"fallback\": \"" + channel + " has stopped broadcasting\", \"text\": \"" + channel + " has stopped broadcasting\", \"color\": \"danger\"}]}";
-
+              message = "{" + (!String.IsNullOrEmpty(channelOverride) ? "\"channel\": \"" + channelOverride + "\", " : "") + "\"attachments\": [{\"fallback\": \"" + channel + " has stopped broadcasting\", \"text\": \"" + channel + " has stopped broadcasting\", \"color\": \"danger\"}]}";
               if (SendMessage(endpoint, message))
               {
                 _channelNofitications.Remove(channel);
@@ -70,9 +70,9 @@ namespace TwitchBot.Notification
       }
     }
 
-    private static string BuildOnlineMessage(string channel, JObject result)
+    private static string BuildOnlineMessage(string channel, string channelOverride_, JObject result)
     {
-      return "{\"attachments\": [{\"fallback\": \"" + channel + " is broadcasting\", \"title\": \"" + channel + " is broadcasting\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"color\": \"good\", \"thumb_url\": \"" + result["stream"]["preview"]["small"].ToString() + "\", \"fields\": [{\"title\": \"Game\", \"value\": \"" + result["stream"]["channel"]["game"].ToString() + "\"},{\"title\": \"Title\", \"value\": \"" + result["stream"]["channel"]["status"].ToString() + "\"}]}]}";
+      return "{" + (!String.IsNullOrEmpty(channelOverride_) ? "\"channel\": \"" + channelOverride_ + "\", " : "") + "\"attachments\": [{\"fallback\": \"" + channel + " is broadcasting\", \"title\": \"" + channel + " is broadcasting\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"color\": \"good\", \"thumb_url\": \"" + result["stream"]["preview"]["small"].ToString() + "\", \"fields\": [{\"title\": \"Game\", \"value\": \"" + result["stream"]["channel"]["game"].ToString() + "\"},{\"title\": \"Title\", \"value\": \"" + result["stream"]["channel"]["status"].ToString() + "\"}]}]}";
     }
 
     private static bool SendMessage(string endpoint, string message)
