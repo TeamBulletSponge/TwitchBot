@@ -50,7 +50,7 @@ namespace TwitchBot.Notification
             }
             else if (!result["stream"].HasValues && _channelNofitications.Contains(channel))
             {
-              message = "{\"attachments\": [{\"text\": \"" + channel + " has stopped broadcasting\", \"color\": \"danger\"}]}";
+              message = "{\"attachments\": [{\"fallback\": \"" + channel + " has stopped broadcasting\", \"text\": \"" + channel + " has stopped broadcasting\", \"color\": \"danger\"}]}";
 
               if (SendMessage(endpoint, message))
               {
@@ -70,7 +70,7 @@ namespace TwitchBot.Notification
 
     private static string BuildOnlineMessage(string channel, JObject result)
     {
-      return "{\"attachments\": [{\"title\": \"" + channel + " is broadcasting\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"color\": \"good\", \"thumb_url\": \"" + result["stream"]["preview"]["small"].ToString() + "\", \"fields\": [{\"title\": \"Game\", \"value\": \"" + result["stream"]["channel"]["game"].ToString() + "\"},{\"title\": \"Title\", \"value\": \"" + result["stream"]["channel"]["status"].ToString() + "\"}]}]}";
+      return "{\"attachments\": [{\"fallback\": \"" + channel + " is broadcasting\", \"title\": \"" + channel + " is broadcasting\", \"title_link\": \"http://twitch.tv/" + channel + "\", \"color\": \"good\", \"thumb_url\": \"" + result["stream"]["preview"]["small"].ToString() + "\", \"fields\": [{\"title\": \"Game\", \"value\": \"" + result["stream"]["channel"]["game"].ToString() + "\"},{\"title\": \"Title\", \"value\": \"" + result["stream"]["channel"]["status"].ToString() + "\"}]}]}";
     }
 
     private static bool SendMessage(string endpoint, string message)
