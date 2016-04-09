@@ -62,6 +62,8 @@ namespace TwitchBot.Notification
           {
             Console.Error.WriteLine(ex);
           }
+
+          Thread.Sleep(TimeSpan.FromSeconds(1));
         }
 
         Thread.Sleep(TimeSpan.FromMinutes(2));
