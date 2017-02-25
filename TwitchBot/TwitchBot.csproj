@@ -113,6 +113,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="App_Data\jobs\continuous\notification\TwitchBot.Notification.exe.config" />
+    <Content Include="App_Data\jobs\continuous\notification\settings.job" />
     <None Include="Properties\PublishProfiles\TwitchIntegrationBot - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
